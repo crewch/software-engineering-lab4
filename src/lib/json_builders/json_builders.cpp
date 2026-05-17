@@ -1,15 +1,13 @@
 #include "json_builders.hpp"
 
-#include <boost/uuid/uuid_io.hpp>
-
 namespace car_rental::utils {
 
 userver::formats::json::Value JsonBuilders::BuildUserJson(
     const domain::User& user
 ) {
     userver::formats::json::ValueBuilder builder;
-    
-    builder["id"] = boost::uuids::to_string(user.GetId());
+
+    builder["id"] = user.GetId();
     builder["login"] = user.GetLogin();
     builder["first_name"] = user.GetFirstName();
     builder["last_name"] = user.GetLastName();
@@ -42,8 +40,8 @@ userver::formats::json::Value JsonBuilders::BuildCarJson(
     const domain::Car& car
 ) {
     userver::formats::json::ValueBuilder builder;
-    
-    builder["id"] = boost::uuids::to_string(car.GetId());
+
+    builder["id"] = car.GetId();
     builder["vin"] = car.GetVin();
     builder["brand"] = car.GetBrand();
     builder["model"] = car.GetModel();
@@ -53,7 +51,7 @@ userver::formats::json::Value JsonBuilders::BuildCarJson(
     builder["daily_rate"] = car.GetDailyRate();
     builder["available"] = car.IsAvailable();
     builder["created_at"] = car.GetCreatedAt();
-    
+
     return builder.ExtractValue();
 }
 
@@ -78,16 +76,16 @@ userver::formats::json::Value JsonBuilders::BuildRentalJson(
     const domain::Rental& rental
 ) {
     userver::formats::json::ValueBuilder builder;
-    
-    builder["id"] = boost::uuids::to_string(rental.GetId());
-    builder["user_id"] = boost::uuids::to_string(rental.GetUserId());
-    builder["car_id"] = boost::uuids::to_string(rental.GetCarId());
+
+    builder["id"] = rental.GetId();
+    builder["user_id"] = rental.GetUserId();
+    builder["car_id"] = rental.GetCarId();
     builder["start_date"] = rental.GetStartDate();
     builder["end_date"] = rental.GetEndDate();
     builder["total_cost"] = rental.GetTotalCost();
     builder["status"] = domain::Rental::RentalStatusToString(rental.GetStatus());
     builder["created_at"] = rental.GetCreatedAt();
-    
+
     return builder.ExtractValue();
 }
 

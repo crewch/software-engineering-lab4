@@ -9,6 +9,7 @@
 #include <userver/formats/json/value_builder.hpp>
 
 #include <docs/definitions/user.hpp>
+#include <infrastructure/mongo_storage/mongo_storage_component.hpp>
 
 namespace car_rental::components {
 
@@ -19,7 +20,8 @@ CreateUser::CreateUser(
     : HttpHandlerBase(config, context),
       storage_(
           context
-              .FindComponent<car_rental::storage::PostgresStorage>()
+              .FindComponent<car_rental::components::MongoStorageComponent>()
+              .GetStorage()
       ),
       user_service_(storage_)
 {}

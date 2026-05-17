@@ -8,7 +8,7 @@
 #include <docs/definitions/user.hpp>
 #include <docs/definitions/auth.hpp>
 #include <infrastructure/jwt/jwt_generator.hpp>
-#include <infrastructure/postgres_storage/postgres_storage.hpp>
+#include <infrastructure/mongo_storage/mongo_storage.hpp>
 
 namespace car_rental::services {
 
@@ -49,14 +49,14 @@ struct AuthResult {
 
 class UserService {
 public:
-    explicit UserService(storage::PostgresStorage& storage);
+    explicit UserService(storage::MongoStorage& storage);
 
     UserResult CreateUser(
         const lab2::user::CreateUserRequest& dto
     );
-    
+
     UserResult GetUserByLogin(const std::string& login);
-    
+
     UserListResult SearchUsers(
         const std::string& name_mask,
         int limit = 20,
@@ -69,7 +69,7 @@ public:
     );
 
 private:
-    storage::PostgresStorage& storage_;
+    storage::MongoStorage& storage_;
 };
 
 } // namespace car_rental::services

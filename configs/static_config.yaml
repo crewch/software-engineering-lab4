@@ -25,10 +25,6 @@ components_manager:
     dynamic-config:
       defaults:
         HTTP_CLIENT_CONNECTION_POOL_SIZE: 1000
-        POSTGRES_DEFAULT_COMMAND_CONTROL:
-          network_timeout_ms: 600000
-          statement_timeout_ms: 600000
-          prepared_statements_enabled: true
       fs-task-processor: fs-task-processor
       load-enabled: true
       updates-enabled: false
@@ -58,16 +54,13 @@ components_manager:
       throttling_enabled: false
       url_trailing_slash: strict-match
 
-    # Postgres
-    postgres-db:
+    # MongoDB
+    mongo-storage-component:
       # prod
-      dbconnection: postgresql://postgres:postgres@postgres:5432/car_rental
+      mongo-uri: mongodb://mongo:mongo@mongo:27017/car_rental?authSource=admin
       # local
-      # dbconnection: postgresql://postgres:postgres@ip:5432/car_rental
-      blocking_task_processor: fs-task-processor
-
-    postgres-storage: {}
-    # Postgres
+      # mongo-uri: mongodb://mongo:mongo@ip:27017/car_rental?authSource=admin
+    # MongoDB
 
     # User
     HandlerCreateUser:

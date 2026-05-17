@@ -18,12 +18,12 @@ components:
         - created_at
       properties:
         id:
-          $ref: 'common.yaml#/components/schemas/UUID'
+          type: string
         user_id:
-          $ref: 'common.yaml#/components/schemas/UUID'
+          type: string
           description: ID пользователя
         car_id:
-          $ref: 'common.yaml#/components/schemas/UUID'
+          type: string
           description: ID автомобиля
         start_date:
           $ref: 'common.yaml#/components/schemas/DateTime'
@@ -48,7 +48,7 @@ components:
         - end_date
       properties:
         car_id:
-          $ref: 'common.yaml#/components/schemas/UUID'
+          type: string
           description: ID автомобиля
         start_date:
           $ref: 'common.yaml#/components/schemas/DateTime'

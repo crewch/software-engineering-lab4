@@ -6,7 +6,6 @@
 #include <optional>
 
 #include <fmt/format.h>
-#include <boost/uuid/uuid.hpp>
 #include <lib/password_hasher/password_hasher.hpp>
 #include <variant>
 #include <domain/exceptions.hpp>
@@ -67,7 +66,7 @@ public:
     }
 
     static User FromDb(
-        const boost::uuids::uuid& id,
+        const std::string& id,
         const std::string& login,
         const std::string& first_name,
         const std::string& last_name,
@@ -77,7 +76,7 @@ public:
         const std::chrono::system_clock::time_point& created_at
     ) {
         User user;
-        user.id_ = id;
+        user.id_str_ = id;
         user.login_ = login;
         user.first_name_ = first_name;
         user.last_name_ = last_name;
@@ -85,11 +84,11 @@ public:
         user.password_ = password;
         user.phone_ = phone;
         user.created_at_ = created_at;
-        
+
         return user;
     }
 
-    const boost::uuids::uuid& GetId() const { return id_; }
+    const std::string& GetId() const { return id_str_; }
     const std::string& GetLogin() const { return login_; }
     const std::string& GetPassword() const { return password_; }
     const std::string& GetFirstName() const { return first_name_; }
@@ -99,7 +98,7 @@ public:
     const std::chrono::system_clock::time_point& GetCreatedAt() const { return created_at_; }
 
 private:
-    boost::uuids::uuid id_;
+    std::string id_str_;
     std::string login_;
     std::string first_name_;
     std::string last_name_;

@@ -23,7 +23,7 @@ public:
     ) const override;
 
 private:
-    storage::PostgresStorage& storage_;
+    storage::MongoStorage& storage_;
     mutable services::RentalService rental_service_;
 };
 

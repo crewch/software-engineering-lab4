@@ -3,13 +3,13 @@
 #include <userver/components/component.hpp>
 #include <userver/components/component_list.hpp>
 #include <userver/components/minimal_server_component_list.hpp>
-#include <userver/storages/postgres/component.hpp>
 #include <userver/congestion_control/component.hpp>
 #include <userver/server/handlers/ping.hpp>
 #include <userver/server/handlers/tests_control.hpp>
 #include <userver/testsuite/testsuite_support.hpp>
 #include <userver/utils/daemon_run.hpp>
 #include <infrastructure/jwt/jwt_auth_factory.hpp>
+#include <infrastructure/mongo_storage/mongo_storage_component.hpp>
 #include <controllers/create_user/create_user.hpp>
 #include <controllers/login/login.hpp>
 #include <controllers/get_user_by_login/get_user_by_login.hpp>
@@ -26,14 +26,13 @@ int main(int argc, char* argv[]) {
           // Base
           .Append<userver::components::TestsuiteSupport>()
           .Append<userver::congestion_control::Component>()
-          
+
           // Network
           .AppendComponentList(userver::clients::http::ComponentList())
           .Append<userver::clients::dns::Component>()
 
-          // Database
-          .Append<userver::components::Postgres>("postgres-db")
-          .Append<car_rental::storage::PostgresStorage>()
+          // MongoDB Storage
+          .Append<car_rental::components::MongoStorageComponent>()
 
           // Auth
           .Append<lab2::infrastructure::JwtAuthComponent>()

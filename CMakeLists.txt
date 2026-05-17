@@ -6,7 +6,7 @@ include(DownloadUserver)
 
 find_package(
     userver
-    COMPONENTS core chaotic postgresql#
+    COMPONENTS core chaotic #
     QUIET
 )
 if(NOT userver_FOUND)
@@ -28,6 +28,10 @@ if (NOT jwt-cpp_FOUND)
   )
 endif()
 
+# Finding MongoDB
+find_package(bsoncxx REQUIRED)
+find_package(mongocxx REQUIRED)
+
 userver_setup_environment()
 
 # Common sources
@@ -40,7 +44,7 @@ file(GLOB INFRASTRUCTURE_SOURCES src/infrastructure/**/*.cpp)
 
 add_library(
     ${PROJECT_NAME}_objs OBJECT
-    
+
     # Services
     ${SERVICES_SOURCES}
 
@@ -56,8 +60,9 @@ add_library(
 target_link_libraries(
     ${PROJECT_NAME}_objs
     PUBLIC userver::core #
-    PUBLIC userver::postgresql #
     PUBLIC jwt-cpp::jwt-cpp #
+    PUBLIC mongo::bsoncxx_shared
+    PUBLIC mongo::mongocxx_shared
 )
 target_include_directories(${PROJECT_NAME}_objs PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src/)
 

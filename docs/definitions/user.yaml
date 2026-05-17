@@ -11,8 +11,7 @@ components:
         - created_at
       properties:
         id:
-          $ref: 'common.yaml#/components/schemas/UUID'
-          description: UUID пользователя
+          type: string
         login:
           type: string
           minLength: 3

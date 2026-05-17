@@ -14,6 +14,7 @@
 #include <string_view>
 #include <limits>
 #include <fmt/format.h>
+#include <infrastructure/mongo_storage/mongo_storage_component.hpp>
 
 namespace car_rental::components {
 
@@ -24,7 +25,7 @@ GetAvailableCars::GetAvailableCars(
     : HttpHandlerBase(config, context),
       storage_(
           context
-              .FindComponent<car_rental::storage::PostgresStorage>()
+              .FindComponent<car_rental::components::MongoStorageComponent>().GetStorage()
       ),
       car_service_(storage_) {}
 

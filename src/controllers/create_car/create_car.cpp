@@ -12,6 +12,7 @@
 
 #include <lib/json_builders/json_builders.hpp>
 #include <docs/definitions/car.hpp>
+#include <infrastructure/mongo_storage/mongo_storage_component.hpp>
 
 namespace car_rental::components {
 
@@ -22,7 +23,7 @@ CreateCar::CreateCar(
     : HttpHandlerBase(config, context),
       storage_(
           context
-              .FindComponent<car_rental::storage::PostgresStorage>()
+              .FindComponent<car_rental::components::MongoStorageComponent>().GetStorage()
       ),
       car_service_(storage_) {}
 

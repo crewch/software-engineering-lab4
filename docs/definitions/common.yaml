@@ -1,11 +1,5 @@
 components:
   schemas:
-    UUID:
-      type: string
-      format: uuid
-      description: 'Стандартный UUID v4'
-      example: '550e8400-e29b-41d4-a716-446655440000'
-
     DateTime:
       type: string
       format: date-time

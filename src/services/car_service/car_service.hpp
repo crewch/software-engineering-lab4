@@ -4,7 +4,7 @@
 #include <vector>
 #include <domain/car.hpp>
 #include <docs/definitions/car.hpp>
-#include <infrastructure/postgres_storage/postgres_storage.hpp>
+#include <infrastructure/mongo_storage/mongo_storage.hpp>
 
 namespace car_rental::services {
 
@@ -31,7 +31,7 @@ struct CarListResult {
 
 class CarService {
 public:
-    explicit CarService(storage::PostgresStorage& storage);
+    explicit CarService(storage::MongoStorage& storage);
 
     CarResult CreateCar(const lab2::car::CreateCarRequest& dto);
 
@@ -41,9 +41,9 @@ public:
         int limit,
         int offset
     );
-    
+
 private:
-    storage::PostgresStorage& storage_;
+    storage::MongoStorage& storage_;
 
 };
 

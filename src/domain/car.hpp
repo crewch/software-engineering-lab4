@@ -6,7 +6,6 @@
 #include <userver/formats/json/exception.hpp>
 #include <variant>
 #include <regex>
-#include <boost/uuid/uuid.hpp>
 #include <domain/exceptions.hpp>
 
 namespace car_rental::domain {
@@ -81,7 +80,7 @@ public:
     }
 
     static Car FromDb(
-        boost::uuids::uuid id,
+        std::string id,
         std::string vin,
         std::string brand,
         std::string model,
@@ -93,7 +92,7 @@ public:
         std::chrono::system_clock::time_point created_at
     ) {
         Car car;
-        car.id_ = id;
+        car.id_str_ = id;
         car.vin_ = vin;
         car.brand_ = brand;
         car.model_ = model;
@@ -103,11 +102,11 @@ public:
         car.daily_rate_ = daily_rate;
         car.available_ = available;
         car.created_at_ = created_at;
-        
+
         return car;
     }
 
-    const boost::uuids::uuid& GetId() const { return id_; }
+    const std::string& GetId() const { return id_str_; }
     const std::string& GetVin() const { return vin_; }
     const std::string& GetBrand() const { return brand_; }
     const std::string& GetModel() const { return model_; }
@@ -147,7 +146,7 @@ public:
     }
 
 private:
-    boost::uuids::uuid id_;
+    std::string id_str_;
     std::string vin_;
     std::string brand_;
     std::string model_;

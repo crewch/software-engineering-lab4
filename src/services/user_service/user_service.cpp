@@ -1,11 +1,10 @@
 #include "user_service.hpp"
-#include <boost/uuid/uuid_io.hpp>
 
 #include <algorithm>
 
 namespace car_rental::services {
 
-UserService::UserService(storage::PostgresStorage& storage)
+UserService::UserService(storage::MongoStorage& storage)
     : storage_(storage) {}
 
 UserResult UserService::CreateUser(
@@ -102,7 +101,7 @@ AuthResult UserService::Login(
         };
     }
 
-    std::string token = jwt_token_generator->Generate(boost::uuids::to_string(user->GetId()));
+    std::string token = jwt_token_generator->Generate(user->GetId());
 
     return  {
         AuthErrorCode::OK,

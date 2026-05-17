@@ -31,7 +31,9 @@
 		}
 	},
 	"forwardPorts": [8080],
-	"image": "ghcr.io/userver-framework/ubuntu-22.04-userver-pg-dev:latest",
+	"build": {
+		"dockerfile": "Dockerfile"
+	},
 	"mounts": [],
 	"onCreateCommand": "sudo git config --global --add safe.directory /home/user/lab2",
 	"remoteUser": "user",

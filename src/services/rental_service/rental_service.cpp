@@ -5,7 +5,7 @@
 
 namespace car_rental::services {
 
-RentalService::RentalService(storage::PostgresStorage& storage)
+RentalService::RentalService(storage::MongoStorage& storage)
     : storage_(storage) {}
 
 namespace {
@@ -31,8 +31,8 @@ double CalculateTotalCost(double daily_rate, int days) {
 
 RentalResult RentalService::CreateRental(
     const lab2::rental::CreateRentalRequest& dto,
-    const boost::uuids::uuid& user_id
-) {  
+    const std::string& user_id
+) {
     auto rental_result = domain::Rental::Create(
         user_id,
         dto.car_id,
@@ -52,15 +52,15 @@ RentalResult RentalService::CreateRental(
 
     auto& rental = std::get<domain::Rental>(rental_result);
 
-    if (!storage_.UserExists(boost::uuids::to_string( user_id))) {
+    if (!storage_.UserExists(user_id)) {
         return {
             RentalErrorCode::NOT_FOUND,
             "User not found",
             std::nullopt
         };
     }
-    
-    auto car = storage_.GetCarById(boost::uuids::to_string(dto.car_id));
+
+    auto car = storage_.GetCarById(dto.car_id);
     if (!car.has_value()) {
         return {
             RentalErrorCode::NOT_FOUND,
@@ -68,19 +68,19 @@ RentalResult RentalService::CreateRental(
             std::nullopt
         };
     }
-    
-    if (!storage_.IsCarAvailable(boost::uuids::to_string(dto.car_id), rental.GetStartDate(), rental.GetEndDate())) {
+
+    if (!storage_.IsCarAvailable(dto.car_id, rental.GetStartDate(), rental.GetEndDate())) {
         return {
             RentalErrorCode::CAR_NOT_AVAILABLE,
             "Car is not available for selected period",
             std::nullopt
         };
     }
-    
+
     const int days = CalculateDays(rental.GetStartDate(), rental.GetEndDate());
     const double total_cost = CalculateTotalCost(car->GetDailyRate(), days);
     rental.RecalculateCost(total_cost);
-    
+
     auto created_rental = storage_.CreateRental(rental);
 
     if (!created_rental.has_value()) {
@@ -90,9 +90,9 @@ RentalResult RentalService::CreateRental(
             std::nullopt
         };
     }
-    
-    storage_.UpdateCarAvailability(boost::uuids::to_string(dto.car_id), false);
-    
+
+    storage_.UpdateCarAvailability(dto.car_id, false);
+
     return {RentalErrorCode::OK, "", std::move(created_rental)};
 }
 
@@ -174,7 +174,7 @@ RentalResult RentalService::CompleteRental(const std::string& id) {
         };
     }
     
-    storage_.UpdateCarAvailability(boost::uuids::to_string(rental->GetCarId()), true);
+    storage_.UpdateCarAvailability(rental->GetCarId(), true);
     
     rental->SetStatus(domain::RentalStatus::completed); 
     

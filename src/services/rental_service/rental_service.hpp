@@ -4,8 +4,7 @@
 #include <string>
 #include <domain/rental.hpp>
 #include <docs/definitions/rental.hpp>
-#include <boost/uuid/uuid_io.hpp>
-#include <infrastructure/postgres_storage/postgres_storage.hpp>
+#include <infrastructure/mongo_storage/mongo_storage.hpp>
 
 namespace car_rental::services {
 
@@ -33,23 +32,23 @@ struct RentalListResult {
 
 class RentalService {
 public:
-    explicit RentalService(storage::PostgresStorage& storage);
+    explicit RentalService(storage::MongoStorage& storage);
 
     RentalResult CreateRental(
         const lab2::rental::CreateRentalRequest& dto,
-        const boost::uuids::uuid& user_id
+        const std::string& user_id
     );
-    
+
     RentalResult GetRentalById(const std::string& id);
-    
+
     RentalListResult GetActiveRentalsByUserId(const std::string& user_id);
-    
+
     RentalListResult GetRentalHistoryByUserId(const std::string& user_id);
-    
+
     RentalResult CompleteRental(const std::string& id);
 
 private:
-    storage::PostgresStorage& storage_;
+    storage::MongoStorage& storage_;
 };
 
 } // namespace car_rental::services

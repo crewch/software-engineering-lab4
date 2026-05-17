@@ -8,6 +8,7 @@
 #include <lib/json_builders/json_builders.hpp>
 #include <docs/definitions/auth.hpp>
 #include <infrastructure/jwt/jwt.hpp>
+#include <infrastructure/mongo_storage/mongo_storage_component.hpp>
 #include <services/user_service/user_service.hpp>
 
 namespace car_rental::components {
@@ -17,11 +18,10 @@ Login::Login(
     const userver::components::ComponentContext& context)
     : HttpHandlerBase(config, context), 
     jwt_token_generator(context.FindComponent<lab2::infrastructure::JwtAuthComponent>().GetGenerator()),
-    storage_(
+      storage_(
           context
-              .FindComponent<car_rental::storage::PostgresStorage>()
-      ),
-    user_service_(storage_) {}
+              .FindComponent<car_rental::components::MongoStorageComponent>().GetStorage()
+      ),    user_service_(storage_) {}
 
 std::string Login::HandleRequestThrow(
     const userver::server::http::HttpRequest& request,

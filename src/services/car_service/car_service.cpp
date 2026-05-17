@@ -1,10 +1,9 @@
 #include "car_service.hpp"
 
-#include <boost/uuid/uuid_io.hpp>
 
 namespace car_rental::services {
 
-CarService::CarService(storage::PostgresStorage& storage)
+CarService::CarService(storage::MongoStorage& storage)
     : storage_(storage) {}
 
 namespace {

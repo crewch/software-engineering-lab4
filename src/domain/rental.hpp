@@ -5,7 +5,6 @@
 #include <optional>
 #include <variant>
 #include <domain/exceptions.hpp>
-#include <boost/uuid/uuid.hpp>
 
 namespace car_rental::domain {
 
@@ -18,8 +17,8 @@ enum class RentalStatus {
 class Rental {
 public:
     static std::variant<exceptions::domain::ValidationError, Rental> Create(
-        const boost::uuids::uuid& user_id,
-        const boost::uuids::uuid& car_id,
+        const std::string& user_id,
+        const std::string& car_id,
         std::chrono::system_clock::time_point start_date,
         std::chrono::system_clock::time_point end_date
     ) {
@@ -29,24 +28,24 @@ public:
                 "End date must be after start date"
             };
         }
-        
-        if (user_id.is_nil()) {
+
+        if (user_id.empty()) {
             return exceptions::domain::ValidationError{
                 "user_id",
                 "User ID is required"
             };
         }
-        
-        if (car_id.is_nil()) {
+
+        if (car_id.empty()) {
             return exceptions::domain::ValidationError{
                 "car_id",
                 "Car ID is required"
             };
         }
-        
+
         Rental rental;
-        rental.user_id_ = user_id;
-        rental.car_id_ = car_id;
+        rental.user_id_str_ = user_id;
+        rental.car_id_str_ = car_id;
         rental.start_date_ = start_date;
         rental.end_date_ = end_date;
         rental.total_cost_ = 0.0;
@@ -56,9 +55,9 @@ public:
     }
 
     static Rental FromDb(
-        const boost::uuids::uuid& id,
-        const boost::uuids::uuid& user_id,
-        const boost::uuids::uuid& car_id,
+        const std::string& id,
+        const std::string& user_id,
+        const std::string& car_id,
         const std::chrono::system_clock::time_point& start_date,
         const std::chrono::system_clock::time_point& end_date,
         double total_cost,
@@ -66,9 +65,9 @@ public:
         const std::chrono::system_clock::time_point& created_at
     ) {
         Rental rental;
-        rental.id_ = id;
-        rental.user_id_ = user_id;
-        rental.car_id_ = car_id;
+        rental.id_str_ = id;
+        rental.user_id_str_ = user_id;
+        rental.car_id_str_ = car_id;
         rental.start_date_ = start_date;
         rental.end_date_ = end_date;
         rental.total_cost_ = total_cost;
@@ -77,9 +76,9 @@ public:
         return rental;
     }
 
-    const boost::uuids::uuid& GetId() const { return id_; }
-    const boost::uuids::uuid& GetUserId() const { return user_id_; }
-    const boost::uuids::uuid& GetCarId() const { return car_id_; }
+    const std::string& GetId() const { return id_str_; }
+    const std::string& GetUserId() const { return user_id_str_; }
+    const std::string& GetCarId() const { return car_id_str_; }
     const std::chrono::system_clock::time_point& GetStartDate() const { return start_date_; }
     const std::chrono::system_clock::time_point& GetEndDate() const { return end_date_; }
     double GetTotalCost() const { return total_cost_; }
@@ -111,9 +110,9 @@ public:
     bool IsActive() const { return status_ == RentalStatus::active; }
 
 private:
-    boost::uuids::uuid id_;
-    boost::uuids::uuid user_id_;
-    boost::uuids::uuid car_id_;
+    std::string id_str_;
+    std::string user_id_str_;
+    std::string car_id_str_;
     std::chrono::system_clock::time_point start_date_;
     std::chrono::system_clock::time_point end_date_;
     double total_cost_;

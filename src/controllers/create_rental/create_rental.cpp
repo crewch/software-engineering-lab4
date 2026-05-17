@@ -1,6 +1,5 @@
 #include "create_rental.hpp"
 
-#include <boost/uuid/string_generator.hpp>
 #include <services/rental_service/rental_service.hpp>
 #include <lib/json_builders/json_builders.hpp>
 #include <docs/definitions/rental.hpp>
@@ -14,6 +13,7 @@
 #include <userver/utils/datetime.hpp>
 
 #include <string>
+#include <infrastructure/mongo_storage/mongo_storage_component.hpp>
 
 namespace car_rental::components {
 
@@ -24,7 +24,7 @@ CreateRental::CreateRental(
     : HttpHandlerBase(config, context),
       storage_(
           context
-              .FindComponent<car_rental::storage::PostgresStorage>()
+              .FindComponent<car_rental::components::MongoStorageComponent>().GetStorage()
       ),
       rental_service_(storage_) {}
 
@@ -59,9 +59,7 @@ std::string CreateRental::HandleRequestThrow(
         );
     }
 
-    boost::uuids::string_generator gen;
-
-    auto user_id = gen(context.GetData<std::string>("user_id"));
+    const auto& user_id = context.GetData<std::string>("user_id");
 
     const auto result = rental_service_.CreateRental(
         create_rental_dto,

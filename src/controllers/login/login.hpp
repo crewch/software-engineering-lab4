@@ -25,7 +25,7 @@ public:
 
 private:
     std::shared_ptr<lab2::infrastructure::JwtTokenGenerator> jwt_token_generator;
-    storage::PostgresStorage& storage_;
+    storage::MongoStorage& storage_;
     mutable services::UserService user_service_;
 };
 

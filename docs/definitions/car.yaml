@@ -19,7 +19,7 @@ components:
         - created_at
       properties:
         id:
-          $ref: 'common.yaml#/components/schemas/UUID'
+          type: string
         vin:
           type: string
           pattern: '^[A-HJ-NPR-Z0-9]{17}$'
